@@ -19,7 +19,7 @@ exports.getAllProducts = async (req, res, next) => {
     }
 
     if (numericFilters) {
-        console.log(numericFilters);
+
         const operatorsMap = {
             '=': '$eq',
             '>': '$gt',
@@ -28,15 +28,18 @@ exports.getAllProducts = async (req, res, next) => {
             '<=': '$lte',
             '!=': '$ne'
         }
+
         const regEx = /\b(=|>|>=|<|<=|!=)\b/g;
         let filters = numericFilters.replace(regEx, (simb) => `-${operatorsMap[simb]}-`);
 
         const options = ['price', 'rating'];
-        filters = filters.split(',').forEach(item => {
-            let [field, operator, value] = item.split('-');
-            if (options.includes(field))
-                queryObject[field] = { [operator]: Number(value) };
-        });
+        filters = filters
+            .split(',')
+            .forEach(item => {
+                let [field, operator, value] = item.split('-');
+                if (options.includes(field))
+                    queryObject[field] = { [operator]: Number(value) };
+            });
 
         console.log(queryObject);
 
